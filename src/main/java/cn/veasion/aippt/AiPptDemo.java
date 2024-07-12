@@ -17,6 +17,9 @@ public class AiPptDemo {
     private static final String BASE_URL = "https://chatmee.cn/api";
 
     public static void main(String[] args) throws Exception {
+        // 官网 https://docmee.cn
+        // 开放平台 https://docmee.cn/open-platform/api
+
         // 填写你的API-KEY
         String apiKey = "{{ YOUR API KEY }}";
 
@@ -43,7 +46,7 @@ public class AiPptDemo {
 
         // 生成PPT
         System.out.println("\n\n========== 正在生成PPT ==========");
-        JSONObject pptInfo = generatePptx(apiToken, templateId, markdown);
+        JSONObject pptInfo = generatePptx(apiToken, templateId, markdown, false);
         String pptId = pptInfo.getString("id");
         System.out.println("pptId: " + pptId);
         System.out.println("ppt主题：" + pptInfo.getString("subject"));
@@ -159,11 +162,12 @@ public class AiPptDemo {
         return template.getString("id");
     }
 
-    public static JSONObject generatePptx(String apiToken, String templateId, String markdown) {
+    public static JSONObject generatePptx(String apiToken, String templateId, String markdown, boolean pptxProperty) {
         String url = BASE_URL + "/ppt/generatePptx";
         JSONObject body = new JSONObject();
         body.put("templateId", templateId);
         body.put("outlineContentMarkdown", markdown);
+        body.put("pptxProperty", pptxProperty);
         HttpUtils.HttpRequest httpRequest = HttpUtils.HttpRequest.postJson(url);
         httpRequest.setBody(body.toJSONString());
         httpRequest.addHeaders("token", apiToken);
