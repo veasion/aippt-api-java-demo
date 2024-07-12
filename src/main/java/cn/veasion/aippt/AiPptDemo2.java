@@ -37,7 +37,7 @@ public class AiPptDemo2 {
 
         String pptId = pptInfo.getString("id");
         String fileUrl = pptInfo.getString("fileUrl");
-        System.out.println("===============");
+        System.out.println("\n\n===============");
         System.out.println("pptId: " + pptId);
         System.out.println("ppt主题：" + pptInfo.getString("subject"));
         System.out.println("ppt封面：" + pptInfo.getString("coverUrl") + "?token=" + apiToken);
