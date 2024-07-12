@@ -7,12 +7,12 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
 /**
- * AiPptDemo
+ * AiPptDemo1 流式生成 PPT
  *
  * @author veasion
  * @date 2024/7/12
  */
-public class AiPptDemo {
+public class AiPptDemo1 {
 
     private static final String BASE_URL = "https://chatmee.cn/api";
 
