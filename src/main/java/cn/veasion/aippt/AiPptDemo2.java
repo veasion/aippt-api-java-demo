@@ -87,6 +87,9 @@ public class AiPptDemo2 {
                     return;
                 }
                 JSONObject json = JSONObject.parseObject(data);
+                if (Objects.equals(json.getInteger("status"), -1)) {
+                    throw new AiPptException(json.getString("error"));
+                }
                 if (Objects.equals(json.getInteger("status"), 4) && json.containsKey("result")) {
                     pptInfo[0] = json.getJSONObject("result");
                 }

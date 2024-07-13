@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.util.Objects;
 
 /**
  * AiPptDemo1 流式生成 PPT
@@ -94,6 +95,9 @@ public class AiPptDemo1 {
                 return;
             }
             JSONObject json = JSONObject.parseObject(data);
+            if (Objects.equals(json.getInteger("status"), -1)) {
+                throw new AiPptException(json.getString("error"));
+            }
             String text = json.getString("text");
             sb.append(text);
             // 打印输出
@@ -124,6 +128,9 @@ public class AiPptDemo1 {
                 return;
             }
             JSONObject json = JSONObject.parseObject(data);
+            if (Objects.equals(json.getInteger("status"), -1)) {
+                throw new AiPptException(json.getString("error"));
+            }
             String text = json.getString("text");
             sb.append(text);
             // 打印输出
