@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class Api {
 
-    public static final String BASE_URL = "https://chatmee.cn";
+    public static final String BASE_URL = "https://docmee.cn";
 
     public static String createApiToken(String apiKey, String uid, Integer limit) {
         String url = BASE_URL + "/api/user/createApiToken";
