@@ -37,7 +37,7 @@ public class AiPptDemo2 {
         System.out.println("\n\n===============");
         System.out.println("pptId: " + pptId);
         System.out.println("ppt主题：" + pptInfo.getString("subject"));
-        System.out.println("ppt封面：" + pptInfo.getString("coverUrl") + "?token=" + apiToken);
+        System.out.println("ppt封面：" + pptInfo.getString("coverUrl"));
         System.out.println("ppt链接：" + fileUrl);
 
         // 下载PPT到桌面
