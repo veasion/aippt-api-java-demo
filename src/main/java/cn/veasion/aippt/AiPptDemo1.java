@@ -6,7 +6,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
 /**
- * AiPptDemo1 流式生成 PPT
+ * 同步流式生成 PPT
  *
  * @author veasion
  * @date 2024/7/12
@@ -51,7 +51,8 @@ public class AiPptDemo1 {
 
         // 下载PPT到桌面
         System.out.println("\n\n========== 正在下载PPT ==========");
-        String url = Api.downloadPptx(apiToken, pptId);
+        JSONObject result = Api.downloadPptx(apiToken, pptId);
+        String url = result.getString("fileUrl");
         System.out.println("ppt链接：" + url);
         String savePath = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath() + File.separator + pptId + ".pptx";
         HttpUtils.download(url, new File(savePath));

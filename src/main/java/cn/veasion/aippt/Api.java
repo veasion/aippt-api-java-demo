@@ -7,6 +7,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -133,6 +135,46 @@ public class Api {
         return sb.toString();
     }
 
+    public static Map<String, String> asyncGenerateContent(String apiToken, String outlineMarkdown, String dataUrl, String templateId, String prompt) {
+        String url = BASE_URL + "/api/ppt/generateContent";
+        JSONObject body = new JSONObject();
+        body.put("asyncGenPptx", true);
+        body.put("templateId", templateId);
+        body.put("outlineMarkdown", outlineMarkdown);
+        body.put("dataUrl", dataUrl);
+        body.put("prompt", prompt);
+        HttpUtils.HttpRequest httpRequest = HttpUtils.HttpRequest.postJson(url);
+        httpRequest.setBody(body.toJSONString());
+        httpRequest.addHeaders("token", apiToken);
+        Map<String, String> pptInfo = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        HttpUtils.HttpResponse response = HttpUtils.requestWithEventStream(httpRequest, data -> {
+            if (data == null || data.isEmpty()) {
+                return;
+            }
+            JSONObject json = JSONObject.parseObject(data);
+            if (Objects.equals(json.getInteger("status"), -1)) {
+                throw new RuntimeException(json.getString("error"));
+            }
+            if (json.getString("pptId") != null) {
+                pptInfo.put("id", json.getString("pptId"));
+            }
+            String text = json.getString("text");
+            sb.append(text);
+            // 打印输出
+            System.out.print(text);
+        });
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("生成大纲内容失败，httpStatus=" + response.getStatus());
+        }
+        if (response.getHeaders().getOrDefault("Content-Type", response.getHeaders().get("content-type")).contains("application/json")) {
+            JSONObject result = response.getResponseToJson();
+            throw new RuntimeException("生成大纲内容失败：" + result.getString("message"));
+        }
+        pptInfo.put("markdown", sb.toString());
+        return pptInfo;
+    }
+
     public static String randomOneTemplateId(String apiToken) {
         String url = BASE_URL + "/api/ppt/randomTemplates";
         JSONObject body = new JSONObject();
@@ -176,7 +218,7 @@ public class Api {
         return result.getJSONObject("data").getJSONObject("pptInfo");
     }
 
-    public static String downloadPptx(String apiToken, String id) {
+    public static JSONObject downloadPptx(String apiToken, String id) {
         String url = BASE_URL + "/api/ppt/downloadPptx";
         JSONObject body = new JSONObject();
         body.put("id", id);
@@ -191,7 +233,7 @@ public class Api {
         if (result.getIntValue("code") != 0) {
             throw new RuntimeException("下载PPT异常，" + result.getString("message"));
         }
-        return result.getJSONObject("data").getString("fileUrl");
+        return result.getJSONObject("data");
     }
 
     public static JSONObject directGeneratePptx(String apiToken, boolean stream, String templateId, String subject, String dataUrl, String prompt, boolean pptxProperty) {
